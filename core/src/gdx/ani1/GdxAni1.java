@@ -16,7 +16,7 @@ public class GdxAni1 extends ApplicationAdapter implements InputProcessor {
     SpriteBatch batch;
     Sprite sprVlad;
     Texture txSheet, txTemp, txOne;
-    Texture front;
+    Texture txtFront, txtBack, txtRight, txtLeft;
     Animation araniVlad[];
     TextureRegion trTemp; // a single temporary texture region
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
@@ -35,7 +35,10 @@ public class GdxAni1 extends ApplicationAdapter implements InputProcessor {
         araniVlad = new Animation[4];
         batch = new SpriteBatch();
         txSheet = new Texture("bob3.png");
-        front = new Texture("front2.png");
+        txtFront = new Texture("front2.png");
+        txtBack = new Texture("back2.png");
+        txtRight = new Texture("right2.png");
+        txtLeft = new Texture("left2.png");
         BackGround = new Texture(Gdx.files.internal("town.png"));
         fW = txSheet.getWidth() / 4;
         fH = txSheet.getHeight() / 4;
@@ -70,32 +73,45 @@ public class GdxAni1 extends ApplicationAdapter implements InputProcessor {
 
 
         if (Gdx.input.isKeyPressed(Keys.S)) {
-           batch.draw(BackGround, 0, 0, 800, 500);
+            batch.draw(BackGround, 0, 0, 800, 500);
             nDy = -3;
             nPos = 0;
-            batch.draw(trTemp, spriteX, spriteY, 50, 80);
+            batch.draw(trTemp, spriteX, spriteY, 40, 70);
         } else if (Gdx.input.isKeyPressed(Keys.W)) {
-           batch.draw(BackGround, 0, 0, 800, 500);
+            batch.draw(BackGround, 0, 0, 800, 500);
             nDy = 3;
             nPos = 1;
-            batch.draw(trTemp, spriteX, spriteY, 50, 80);
+            batch.draw(trTemp, spriteX, spriteY, 40, 70);
         } else if (Gdx.input.isKeyPressed(Keys.A)) {
             batch.draw(BackGround, 0, 0, 800, 500);
             nDx = -3;
             nPos = 2;
-            batch.draw(trTemp, spriteX, spriteY, 50, 80);
+            batch.draw(trTemp, spriteX, spriteY, 40, 70);
         } else if (Gdx.input.isKeyPressed(Keys.D)) {
-           batch.draw(BackGround, 0, 0, 800, 500);
+            batch.draw(BackGround, 0, 0, 800, 500);
             nDx = 3;
             nPos = 3;
-            batch.draw(trTemp, spriteX, spriteY, 50, 80);
+            batch.draw(trTemp, spriteX, spriteY, 40, 70);
         } else {
             batch.draw(BackGround, 0, 0, 800, 500);
-            batch.draw(front, spriteX, spriteY, 100, 70);
+            if (nPos == 0) {
+                batch.draw(txtFront, spriteX, spriteY, 40, 60);
+            }
+            if (nPos == 1) {
+                batch.draw(txtBack, spriteX, spriteY, 40, 60);
+            }
+            if (nPos == 2) {
+                batch.draw(txtLeft, spriteX, spriteY, 40, 55);
+            }
+            if (nPos == 3) {
+                batch.draw(txtRight, spriteX, spriteY, 40, 55);
+            }
+
         }
 
         if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-           batch.draw(BackGround, 0, 0, 800, 500);
+            batch.draw(BackGround, 0, 0, 800, 500);
+            batch.draw(trTemp, spriteX, spriteY, 40, 70);
             nDx = (nDx * 2);
             nDy = (nDy * 2);
         }

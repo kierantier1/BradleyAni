@@ -26,6 +26,7 @@ public class GdxAni1 extends ApplicationAdapter implements InputProcessor {
     float spriteY;
     int nDx, nDy, nDir;
     Texture BackGround;
+   
 
     @Override
     public void create() {
@@ -64,7 +65,7 @@ public class GdxAni1 extends ApplicationAdapter implements InputProcessor {
         if (nFrame > 28) {
             nFrame = 0;
         }
-        System.out.println(nPos + " " + nFrame);
+//        System.out.println(nPos + " " + nFrame);
         trTemp = araniVlad[nPos].getKeyFrame(nFrame, true);
         batch.begin();
         nDx = 0;

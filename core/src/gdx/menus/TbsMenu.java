@@ -6,9 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
-/**
- * Created by luke on 2016-04-13.
- */
 
 public class TbsMenu extends TextButton.TextButtonStyle {
     Skin skin = new Skin();

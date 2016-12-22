@@ -1,6 +1,5 @@
 package gdx.menu.Screens;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,7 +8,6 @@ import gdx.menus.TbMenu;
 import gdx.menus.TbsMenu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.*;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,8 +16,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-
-public class ScrPlay  implements Screen, InputProcessor {
+public class ScrPlay implements Screen, InputProcessor {
 
     GamMenu gamMenu;
     TbsMenu tbsMenu;
@@ -41,10 +38,7 @@ public class ScrPlay  implements Screen, InputProcessor {
 
     public ScrPlay(GamMenu _gamMenu) {  //Referencing the main class.
         gamMenu = _gamMenu;
-    }
-
-    public void create() {
-        Gdx.input.setInputProcessor((this));
+                Gdx.input.setInputProcessor((this));
         nFrame = 0;
         nPos = 0; // the position in the SpriteSheet - 0 to 7
         araniVlad = new Animation[4];
@@ -75,17 +69,15 @@ public class ScrPlay  implements Screen, InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        nFrame++; 
+        nFrame++;
         if (nFrame > 28) {
             nFrame = 0;
         }
-//        System.out.println(nPos + " " + nFrame);
         trTemp = araniVlad[nPos].getKeyFrame(nFrame, true);
         batch.begin();
         nDx = 0;
         nDy = 0;
         nDir = 0;
-
 
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             batch.draw(BackGround, 0, 0, 800, 500);
@@ -140,7 +132,6 @@ public class ScrPlay  implements Screen, InputProcessor {
     public void show() {
     }
 
-   
     @Override
     public void resize(int width, int height) {
     }

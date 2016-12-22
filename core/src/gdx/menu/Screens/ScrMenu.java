@@ -14,10 +14,8 @@ import gdx.menus.GamMenu;
 import gdx.menus.TbMenu;
 import gdx.menus.TbsMenu;
 
-
-import java.awt.Font;
-
 public class ScrMenu implements Screen, InputProcessor {
+
     GamMenu gamMenu;
     TbsMenu tbsMenu;
     TbMenu tbPlay, tbGameover;
@@ -36,7 +34,7 @@ public class ScrMenu implements Screen, InputProcessor {
         tbsMenu = new TbsMenu();
         batch = new SpriteBatch();
         screenName = new BitmapFont();
-        tbPlay = new TbMenu("PLAY", tbsMenu);
+        tbPlay = new TbMenu("ENTER", tbsMenu);
         tbPlay.setY(0);
         tbPlay.setX(440);
         stage.addActor(tbPlay);
@@ -60,7 +58,6 @@ public class ScrMenu implements Screen, InputProcessor {
         tbPlay.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                
                 gamMenu.updateState(1); // switch to Play screen.
             }
         });

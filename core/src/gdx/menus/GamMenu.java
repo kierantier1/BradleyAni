@@ -3,15 +3,12 @@ package gdx.menus;
 import com.badlogic.gdx.Game;
 import gdx.menu.Screens.ScrMenu;
 import gdx.menu.Screens.ScrPlay;
-import gdx.menu.Screens.ScrGame;
 import gdx.menu.Screens.ScrGameover;
-import gdx.ani1.GdxAni1;
 
 public class GamMenu extends Game {
 
     ScrMenu scrMenu;
     ScrPlay scrPlay;
-    ScrGame scrGame;
     
     ScrGameover scrGameover;
     int nScreen; // 0 for menu, 1 for play, and 2 for game over

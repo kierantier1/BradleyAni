@@ -1,10 +1,5 @@
 package gdx.Cam;
 
-// this basic program works!!!
-// Now, I want to click the image and change the background colour
-//trying many things - imgage buttons, just images. Can't get it to work without lots of layers.
-// wonder if I need scene2d - nope - not now.
-//I am going back to "drop".
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,11 +13,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import gdx.ani1.GdxAni1;
-
 
 public class ScrCam1 implements Screen, InputProcessor {
 
@@ -31,7 +33,7 @@ public class ScrCam1 implements Screen, InputProcessor {
     OrthographicCamera ocCam;
     Viewport viewport;
     //Texture txBad;
-    Sprite sprBob;
+    SprBob sprBob;
     Texture txBg;
     boolean isClick = false;
     int nX, nY, fVx, fVy; // coordinates for the dude.
@@ -46,16 +48,16 @@ public class ScrCam1 implements Screen, InputProcessor {
         nY = 0;
         game = _game;
         batch = new SpriteBatch();
-        //txBad = new Texture("badlogic.jpg");
         Gdx.input.setInputProcessor((this));
         nW = Gdx.graphics.getWidth();
         nH = Gdx.graphics.getHeight();
-       // sprBob = new Sprite("bob.png", nW / 2, nH / 2);
+        sprBob = new SprBob("bob.png", nW / 2, nH / 2);
     }
 
     //@Override
+    @Override
     public void show() {
-        txBg = new Texture("bg.jpg");
+        txBg = new Texture("town.png");
 
         ocCam = new OrthographicCamera();
         viewport = new FillViewport(nW, nH, ocCam);
@@ -66,27 +68,20 @@ public class ScrCam1 implements Screen, InputProcessor {
     }
 
     //@Override
+    @Override
     public void render(float delta) {
         ocCam.translate(fVx, fVy, 0);
         ocCam.update();
-        
+        sprBob.update(fVx, fVy);
 
-        //sprBad.update(fVx, fVy);
-
-        if (isClick) {
-            Gdx.gl.glClearColor(1, 0, 1, 1); // purple???
-
-        } else {
-            Gdx.gl.glClearColor(1, 0, 0, 1);
-        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.setProjectionMatrix(ocCam.combined);
         batch.draw(txBg, 0, 0, nW, nH);
-     //   batch.draw(sprBob, gdxAni1.getX(), gdxAni1.getY());
-      //  System.out.println(gdxAni1.getX() + "  " + gdxAni1.getY());
-        //imgBad.draw(batch, delta);
-        //batch.draw(txBad, nX, nY);
+        batch.draw(sprBob.getSprite(), sprBob.getX(), sprBob.getY());
+        System.out.println(sprBob.getX() + "  " + sprBob.getY());    
+      
+        //batch.draw(txBob, nX, nY);
         batch.end();
     }
 
@@ -135,9 +130,7 @@ public class ScrCam1 implements Screen, InputProcessor {
         } else if (keycode == Input.Keys.RIGHT) {
             nX++;
             fVx = 2;
-        } else {
-            System.out.println("Zappa for President");
-        }
+        } 
         // trying to re-set the camera, and therefore scroll the background.
         System.out.println(nX + " " + nY);
         //ocCam.position.set((int)sprBad.getX()+ nX, (int)sprBad.getY()+ nY, 0);

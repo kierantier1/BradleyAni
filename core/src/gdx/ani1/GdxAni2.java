@@ -1,13 +1,8 @@
-package gdx.menu.Screens;
+package gdx.ani1;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import gdx.menus.GamMenu;
-import gdx.menus.TbMenu;
-import gdx.menus.TbsMenu;
-
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.*;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,13 +11,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class ScrPlay implements Screen, InputProcessor {
+public class GdxAni2 extends GdxAni1 implements InputProcessor {
 
-    GamMenu gamMenu;
-    TbsMenu tbsMenu;
-    TbMenu tbMenu, tbGameover;
     SpriteBatch batch;
-    BitmapFont screenName;
     Sprite sprVlad;
     Texture txSheet, txTemp, txOne;
     Texture txtFront, txtBack, txtRight, txtLeft;
@@ -31,23 +22,24 @@ public class ScrPlay implements Screen, InputProcessor {
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
     int nFrame, nPos;
     float spriteSpeed = 10.0f; // 10 pixels per second.
-    float spriteX = 200;
-    float spriteY = 200;
+    float spriteX;
+    float spriteY;
     int nDx, nDy, nDir;
     Texture BackGround;
+   
 
-    public ScrPlay(GamMenu _gamMenu) {  //Referencing the main class.
-        gamMenu = _gamMenu;
-                Gdx.input.setInputProcessor((this));
+    @Override
+    public void create() {
+        Gdx.input.setInputProcessor((this));
         nFrame = 0;
         nPos = 0; // the position in the SpriteSheet - 0 to 7
         araniVlad = new Animation[4];
         batch = new SpriteBatch();
-        txSheet = new Texture("bob3.png");
-        txtFront = new Texture("front2.png");
-        txtBack = new Texture("back2.png");
-        txtRight = new Texture("right2.png");
-        txtLeft = new Texture("left2.png");
+        txSheet = new Texture("pic.png");
+//        txtFront = new Texture("front2.png");
+//        txtBack = new Texture("back2.png");
+//        txtRight = new Texture("right2.png");
+//        txtLeft = new Texture("left2.png");
         BackGround = new Texture(Gdx.files.internal("town.png"));
         fW = txSheet.getWidth() / 4;
         fH = txSheet.getHeight() / 4;
@@ -66,36 +58,37 @@ public class ScrPlay implements Screen, InputProcessor {
     }
 
     @Override
-    public void render(float delta) {
+    public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         nFrame++;
         if (nFrame > 28) {
             nFrame = 0;
         }
+//        System.out.println(nPos + " " + nFrame);
         trTemp = araniVlad[nPos].getKeyFrame(nFrame, true);
         batch.begin();
         nDx = 0;
         nDy = 0;
         nDir = 0;
-        batch.draw(trTemp, 0, 0);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+
+        if (Gdx.input.isKeyPressed(Keys.S)) {
             batch.draw(BackGround, 0, 0, 800, 500);
             nDy = -3;
             nPos = 0;
             batch.draw(trTemp, spriteX, spriteY, 40, 70);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        } else if (Gdx.input.isKeyPressed(Keys.W)) {
             batch.draw(BackGround, 0, 0, 800, 500);
             nDy = 3;
             nPos = 1;
             batch.draw(trTemp, spriteX, spriteY, 40, 70);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        } else if (Gdx.input.isKeyPressed(Keys.A)) {
             batch.draw(BackGround, 0, 0, 800, 500);
             nDx = -3;
             nPos = 2;
             batch.draw(trTemp, spriteX, spriteY, 40, 70);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        } else if (Gdx.input.isKeyPressed(Keys.D)) {
             batch.draw(BackGround, 0, 0, 800, 500);
             nDx = 3;
             nPos = 3;
@@ -117,7 +110,7 @@ public class ScrPlay implements Screen, InputProcessor {
 
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+        if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
             batch.draw(BackGround, 0, 0, 800, 500);
             batch.draw(trTemp, spriteX, spriteY, 40, 70);
             nDx = (nDx * 2);
@@ -130,36 +123,15 @@ public class ScrPlay implements Screen, InputProcessor {
     }
 
     @Override
-    public void show() {
-    }
-
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-    }
-
-    @Override
     public boolean keyDown(int keycode) {
+
+
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+
         return false;
     }
 

@@ -23,31 +23,35 @@ public class ScrPlay implements Screen, InputProcessor {
     TbMenu tbMenu, tbGameover;
     SpriteBatch batch;
     BitmapFont screenName;
-    Sprite sprVlad;
-    Texture txSheet, txTemp, txOne;
+    Sprite sprVlad, sprPic;
+    Texture txSheet, txSheet2, txTemp, txOne;
     Texture txtFront, txtBack, txtRight, txtLeft;
-    Animation araniVlad[];
-    TextureRegion trTemp; // a single temporary texture region
+    Animation araniVlad[], aranPic[];
+    TextureRegion trTemp, trTemp2; // a single temporary texture region
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
     int nFrame, nPos;
     float spriteSpeed = 10.0f; // 10 pixels per second.
     float spriteX = 200;
     float spriteY = 200;
+    float spriteX2 = 100;
+    float spriteY2 = 100;
     int nDx, nDy, nDir;
     Texture BackGround;
 
     public ScrPlay(GamMenu _gamMenu) {  //Referencing the main class.
         gamMenu = _gamMenu;
-                Gdx.input.setInputProcessor((this));
+        Gdx.input.setInputProcessor((this));
         nFrame = 0;
         nPos = 0; // the position in the SpriteSheet - 0 to 7
         araniVlad = new Animation[4];
+        aranPic = new Animation[4];
         batch = new SpriteBatch();
         txSheet = new Texture("bob3.png");
         txtFront = new Texture("front2.png");
         txtBack = new Texture("back2.png");
         txtRight = new Texture("right2.png");
         txtLeft = new Texture("left2.png");
+        txSheet2 = new Texture("pic4.png");
         BackGround = new Texture(Gdx.files.internal("town.png"));
         fW = txSheet.getWidth() / 4;
         fH = txSheet.getHeight() / 4;
@@ -63,6 +67,19 @@ public class ScrPlay implements Screen, InputProcessor {
             araniVlad[i] = new Animation(7f, arSprVlad);
 
         }
+        fW = txSheet2.getWidth() / 4;
+        fH = txSheet2.getHeight() / 4;
+        for (int i = 0; i < 4; i++) {
+            Sprite[] arSprPic = new Sprite[4];
+            for (int j = 0; j < 4; j++) {
+                fSx = j * fW;
+                fSy = i * fH;
+                sprPic = new Sprite(txSheet2, fSx, fSy, fW, fH);
+                arSprPic[j] = new Sprite(sprPic);
+            }
+            aranPic[i] = new Animation(7f, arSprPic);
+
+        }
     }
 
     @Override
@@ -74,11 +91,11 @@ public class ScrPlay implements Screen, InputProcessor {
             nFrame = 0;
         }
         trTemp = araniVlad[nPos].getKeyFrame(nFrame, true);
+        trTemp2 = aranPic[nPos].getKeyFrame(nFrame, true);
         batch.begin();
         nDx = 0;
         nDy = 0;
         nDir = 0;
-        batch.draw(trTemp, 0, 0);
 
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             batch.draw(BackGround, 0, 0, 800, 500);
@@ -116,6 +133,7 @@ public class ScrPlay implements Screen, InputProcessor {
             }
 
         }
+        batch.draw(trTemp2, spriteX2, spriteY2, 40, 40);
 
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             batch.draw(BackGround, 0, 0, 800, 500);

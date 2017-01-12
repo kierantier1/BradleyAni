@@ -51,7 +51,7 @@ public class ScrPlay implements Screen, InputProcessor {
         txtBack = new Texture("back2.png");
         txtRight = new Texture("right2.png");
         txtLeft = new Texture("left2.png");
-        txSheet2 = new Texture("pic4.png");
+        txSheet2 = new Texture("pic5.png");
         BackGround = new Texture(Gdx.files.internal("town.png"));
         fW = txSheet.getWidth() / 4;
         fH = txSheet.getHeight() / 4;
@@ -133,7 +133,7 @@ public class ScrPlay implements Screen, InputProcessor {
             }
 
         }
-        batch.draw(trTemp2, spriteX2, spriteY2, 40, 40);
+        batch.draw(trTemp2, spriteX - 20, spriteY -20, 40, 40);
 
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             batch.draw(BackGround, 0, 0, 800, 500);

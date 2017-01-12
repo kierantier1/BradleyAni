@@ -14,65 +14,53 @@ import gdx.menus.GamMenu;
 import gdx.menus.TbMenu;
 import gdx.menus.TbsMenu;
 
-public class ScrMenu implements Screen, InputProcessor {
+public class ScrRules implements Screen, InputProcessor {
 
     GamMenu gamMenu;
     TbsMenu tbsMenu;
-    TbMenu tbPlay, tbRules;
+    TbMenu tbPlay, tbMenu;
     Stage stage;
     SpriteBatch batch;
     BitmapFont screenName;
     Texture BackGround;
 
-    public ScrMenu(GamMenu _gamMenu) {  //Referencing the main class.
+    public ScrRules(GamMenu _gamMenu) {  //Referencing the main class.
         gamMenu = _gamMenu;
     }
 
-    @Override
     public void show() {
         stage = new Stage();
         tbsMenu = new TbsMenu();
         batch = new SpriteBatch();
         screenName = new BitmapFont();
-        tbPlay = new TbMenu("PLAY", tbsMenu);
-        tbRules = new TbMenu("CONTROLS", tbsMenu);
-        tbPlay.setY(0);
-        tbPlay.setX(540);
-        tbRules.setY(0);
-        tbRules.setX(0);
-        stage.addActor(tbPlay);
-        stage.addActor(tbRules);
+        tbMenu = new TbMenu("MENU", tbsMenu);
+        BackGround = new Texture(Gdx.files.internal("rules.jpg"));
+        tbMenu.setY(0);
+        tbMenu.setX(0);
+        stage.addActor(tbMenu);
         Gdx.input.setInputProcessor(stage);
-        btnPlayListener();
-        btnRulesListener();
-        BackGround = new Texture(Gdx.files.internal("menu.png"));
+        btnMenuListener();
     }
 
-    @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 1, 0, 1); //Green background.
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(BackGround, 0, 0, 650, 500);
+        batch.draw(BackGround, 0, 0, 800, 500);
+        screenName.draw(batch, "Simple stuff really", 230, 300);
+        screenName.draw(batch, "1) WASD to move", 230, 275);
+        screenName.draw(batch, "2) Shift key to run faster", 230, 255);
+        screenName.draw(batch, "3) Mouse to click things (but you already knew that ;) )", 230, 235);
+        
         batch.end();
         stage.act();
         stage.draw();
     }
 
-    public void btnPlayListener() {
-        tbPlay.addListener(new ChangeListener() {
-            @Override
+    public void btnMenuListener() {
+        tbMenu.addListener(new ChangeListener() {
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                gamMenu.updateState(1); // switch to Play screen.
-            }
-        });
-    }
 
-    public void btnRulesListener() {
-        tbRules.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                gamMenu.updateState(2); // switch to rules screen.
+                gamMenu.updateState(0);
             }
         });
     }

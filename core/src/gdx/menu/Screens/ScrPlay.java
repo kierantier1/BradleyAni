@@ -15,6 +15,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import static java.lang.Math.abs;
+import static java.lang.Math.atan;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 public class ScrPlay implements Screen, InputProcessor {
 
@@ -29,25 +33,24 @@ public class ScrPlay implements Screen, InputProcessor {
     Animation araniVlad[], aranPic[];
     TextureRegion trTemp, trTemp2; // a single temporary texture region
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
-    int nFrame, nFrame2, nPos;
+    int nFrame, nPos;
     float spriteSpeed = 10.0f; // 10 pixels per second.
     float spriteX = 200;
     float spriteY = 200;
     float spriteX2 = 100;
     float spriteY2 = 100;
-    int nDx, nDy, nAx, nAy, nDir;
+    int nDx, nDy, nDir;
+    int nPixRenderTimer = 0;
+    int nDirPixX, nDirPixY;       // Direction Pix wants to walk in.
+    double nDeltaPixX, nDeltaPixY;
+    double dPixAngle;
+    int nPixXi, nPixYi;   // Pix X and Y increment
     Texture BackGround;
 
     public ScrPlay(GamMenu _gamMenu) {  //Referencing the main class.
-        nDx = -60;
-        nDy = 70;
-        nAx = nAx + nDx / 10;
-        nAy = nAy + nDy / 10;
-
         gamMenu = _gamMenu;
         Gdx.input.setInputProcessor((this));
         nFrame = 0;
-        nFrame2 = 0;
         nPos = 0; // the position in the SpriteSheet - 0 to 7
         araniVlad = new Animation[4];
         aranPic = new Animation[4];
@@ -96,12 +99,8 @@ public class ScrPlay implements Screen, InputProcessor {
         if (nFrame > 28) {
             nFrame = 0;
         }
-        nFrame2++;
-        if (nFrame2 > 28) {
-            nFrame2 = 0;
-        }
         trTemp = araniVlad[nPos].getKeyFrame(nFrame, true);
-        trTemp2 = aranPic[nPos].getKeyFrame(nFrame2, true);
+        trTemp2 = aranPic[nPos].getKeyFrame(nFrame, true);
         batch.begin();
         nDx = 0;
         nDy = 0;
@@ -143,28 +142,30 @@ public class ScrPlay implements Screen, InputProcessor {
             }
 
         }
+        
+        nPixRenderTimer++;
+        if (nPixRenderTimer == 10) {
+            nPixRenderTimer = 0;
+            
+            nDirPixX = 1;
+            if (spriteX < spriteX2) nDirPixX = -1;
+            nDirPixY = 1;
+            if (spriteY < spriteY2) nDirPixY = -1;
+            
+            nDeltaPixX = abs(spriteX2 - spriteX);
+            nDeltaPixY = abs(spriteY2 - spriteY);
+            
+            dPixAngle = atan(nDeltaPixX / nDeltaPixY);
+            
+            nPixXi = (int) (5 * cos(dPixAngle) * nDirPixX);
+            nPixYi = (int) (5 * sin(dPixAngle) * nDirPixY);
+            
+            spriteX2 += nPixXi;
+            spriteY2 += nPixYi;
+            
+        }
+        
         batch.draw(trTemp2, spriteX2, spriteY2, 40, 40);
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            batch.draw(BackGround, 0, 0, 800, 500);
-            nDy = -3;
-            nPos = 0;
-            batch.draw(trTemp2, spriteX2, spriteY2, 40, 40);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            batch.draw(BackGround, 0, 0, 800, 500);
-            nDy = 3;
-            nPos = 1;
-            batch.draw(trTemp2, spriteX2, spriteY2, 40, 40);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            batch.draw(BackGround, 0, 0, 800, 500);
-            nDx = -3;
-            nPos = 2;
-            batch.draw(trTemp2, spriteX2, spriteY2, 40, 40);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            batch.draw(BackGround, 0, 0, 800, 500);
-            nDx = 3;
-            nPos = 3;
-           batch.draw(trTemp2, spriteX2, spriteY2, 40, 40);
-        } 
 
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             batch.draw(BackGround, 0, 0, 800, 500);
@@ -174,8 +175,6 @@ public class ScrPlay implements Screen, InputProcessor {
         }
         spriteX += nDx;
         spriteY += nDy;
-        spriteX2 += nDx;
-        spriteY2 += nDy;
         batch.end();
 
     }

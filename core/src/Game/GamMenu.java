@@ -1,4 +1,4 @@
-package gdx.menus;
+package Game;
 
 import com.badlogic.gdx.Game;
 import gdx.menu.Screens.ScrMenu;

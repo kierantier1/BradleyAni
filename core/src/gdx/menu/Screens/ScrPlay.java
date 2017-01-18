@@ -76,6 +76,7 @@ public class ScrPlay implements Screen, InputProcessor {
 
         arrBackGround[0] = new Texture("town.png");
         arrBackGround[1] = new Texture("ff.png");
+        arrBackGround[2] = new Texture("thing.jpg");
 
         //BackGround = new Texture(Gdx.files.internal("town.png"));
         fW = txSheet.getWidth() / 4;
@@ -148,6 +149,19 @@ public class ScrPlay implements Screen, InputProcessor {
             fSpriteX2 = 700;
             fSpriteX3 = 700;
         }
+        if (fSpriteX > 600 && nRoomNum == 1) {
+            nRoomNum = 2;
+            fSpriteX = 0;
+            fSpriteX2 = 0;
+            fSpriteX3 = 0;
+        }
+        if (fSpriteX < 0 && nRoomNum == 2) {
+            nRoomNum = 1;
+            fSpriteX = 600;
+            fSpriteX2 = 700;
+            fSpriteX3 = 700;
+        }
+
 
 
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {

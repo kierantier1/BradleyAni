@@ -27,11 +27,11 @@ public class ScrPlay implements Screen, InputProcessor {
     TbMenu tbMenu, tbGameover;
     SpriteBatch batch;
     BitmapFont screenName;
-    Sprite sprBob, sprPic, sprJoy;
-    Texture txSheet, txSheet2, txSheet3, txTemp, txOne;
+    Sprite sprBob, sprPic, sprJoy, sprBall;
+    Texture txSheet, txSheet2, txSheet3, txSheet4, txTemp, txOne;
     Texture txtFront, txtBack, txtRight, txtLeft;
-    Animation aranBob[], aranPic[], aranJoy[];
-    TextureRegion trTemp, trTemp2, trTemp3; // a single temporary texture region
+    Animation aranBob[], aranPic[], aranJoy[], aranBall[];
+    TextureRegion trTemp, trTemp2, trTemp3, trTemp4; // a single temporary texture region
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
     int nFrame, nPos;
     float spriteSpeed = 10.0f; // 10 pixels per second.
@@ -41,6 +41,8 @@ public class ScrPlay implements Screen, InputProcessor {
     float fSpriteY2 = 100;
     float fSpriteX3 = 500;
     float fSpriteY3 = 400;
+    float fSpriteX4 = 400;
+    float fSpriteY4 = 100;
     int nDx, nDy, nDir;
     int nPixRenderTimer = 0;
     int nDirPixX, nDirPixY;       // Direction Pix wants to walk in.
@@ -64,6 +66,7 @@ public class ScrPlay implements Screen, InputProcessor {
         aranBob = new Animation[4];
         aranPic = new Animation[4];
         aranJoy = new Animation[4];
+        aranBall = new Animation[12];
         batch = new SpriteBatch();
         txSheet = new Texture("bob3.png");
         txtFront = new Texture("front2.png");
@@ -72,6 +75,8 @@ public class ScrPlay implements Screen, InputProcessor {
         txtLeft = new Texture("left2.png");
         txSheet2 = new Texture("pic5.png");
         txSheet3 = new Texture("joy3.png");
+        txSheet4 = new Texture("ball3.png");
+
         arrBackGround = new Texture[9];
 
         arrBackGround[0] = new Texture("town.png");
@@ -162,10 +167,12 @@ public class ScrPlay implements Screen, InputProcessor {
             fSpriteX2 = 700;
             fSpriteX3 = 700;
         }
-        if (fSpriteY < -20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
-            fSpriteY = 500;
-            fSpriteY2 = 600;
-            fSpriteY3 = 600;
+        //hit testing agaist borders of rooms
+        if (fSpriteY < 20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
+            fSpriteY += 3;
+        }
+        if (fSpriteX < 60 && nRoomNum == 0) {
+            fSpriteX += 3;
         }
 
 
@@ -257,7 +264,6 @@ public class ScrPlay implements Screen, InputProcessor {
             fSpriteY3 += nJoyYi;
 
         }
-
         batch.draw(trTemp2, fSpriteX2, fSpriteY2, 40, 40);
         batch.draw(trTemp3, fSpriteX3, fSpriteY3, 60, 70);
 

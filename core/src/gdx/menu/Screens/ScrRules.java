@@ -46,10 +46,13 @@ public class ScrRules implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(BackGround, 0, 0, 800, 500);
-        screenName.draw(batch, "Simple stuff really", 230, 300);
-        screenName.draw(batch, "1) WASD to move", 230, 275);
-        screenName.draw(batch, "2) Shift key to run faster", 230, 255);
-        screenName.draw(batch, "3) Mouse to click things (but you already knew that ;) )", 230, 235);
+        screenName.draw(batch, "Simple stuff really", 230, 400);
+        screenName.draw(batch, "1) WASD to move", 230, 375);
+        screenName.draw(batch, "2) Shift key to run faster", 230, 355);
+        screenName.draw(batch, "3) Mouse to click things (but you already knew that ;) )", 230, 335);
+        screenName.draw(batch, "OBJECTIVE", 230, 300);
+        screenName.draw(batch, "FIND THE POKEBALL", 230, 270);
+        screenName.draw(batch, "DON'T LET PIKACHEU OR JOY CATCH YOU!!!!", 230, 250);
         
         batch.end();
         stage.act();

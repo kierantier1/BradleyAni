@@ -137,11 +137,12 @@ public class ScrPlay implements Screen, InputProcessor {
         nDy = 0;
         nDir = 0;
 
+        //This is changing rooms based on his coordinates
         if (fSpriteX > 600 && nRoomNum == 0) {
             nRoomNum = 1;
             fSpriteX = 0;
-            fSpriteX2 = 0;
-            fSpriteX3 = 0;
+            fSpriteX2 = -100;
+            fSpriteX3 = -100;
         }
         if (fSpriteX < 0 && nRoomNum == 1) {
             nRoomNum = 0;
@@ -152,14 +153,19 @@ public class ScrPlay implements Screen, InputProcessor {
         if (fSpriteX > 600 && nRoomNum == 1) {
             nRoomNum = 2;
             fSpriteX = 0;
-            fSpriteX2 = 0;
-            fSpriteX3 = 0;
+            fSpriteX2 = -100;
+            fSpriteX3 = -100;
         }
         if (fSpriteX < 0 && nRoomNum == 2) {
             nRoomNum = 1;
             fSpriteX = 600;
             fSpriteX2 = 700;
             fSpriteX3 = 700;
+        }
+        if (fSpriteY < -20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
+            fSpriteY = 500;
+            fSpriteY2 = 600;
+            fSpriteY3 = 600;
         }
 
 
@@ -262,6 +268,7 @@ public class ScrPlay implements Screen, InputProcessor {
             batch.draw(trTemp3, fSpriteX3, fSpriteY3, 60, 70);
             nDx = (nDx * 2);
             nDy = (nDy * 2);
+
         }
         fSpriteX += nDx;
         fSpriteY += nDy;

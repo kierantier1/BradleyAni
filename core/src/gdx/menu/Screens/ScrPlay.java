@@ -167,12 +167,27 @@ public class ScrPlay implements Screen, InputProcessor {
             fSpriteX2 = 700;
             fSpriteX3 = 700;
         }
+        if (fSpriteX > 600 && nRoomNum == 2) {
+            nRoomNum = 0;
+            fSpriteX = 0;
+            fSpriteX2 = -100;
+            fSpriteX3 = -100;
+        }
         //hit testing agaist borders of rooms
         if (fSpriteY < 20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
             fSpriteY += 3;
         }
         if (fSpriteX < 60 && nRoomNum == 0) {
             fSpriteX += 3;
+        }
+         if (fSpriteY > 400 && nRoomNum == 0) {
+            fSpriteY -= 3;
+        }
+          if (fSpriteY > 200 && nRoomNum == 1) {
+            fSpriteY -= 3;
+        }
+           if (fSpriteY > 300 && nRoomNum == 2) {
+            fSpriteY -= 3;
         }
 
 

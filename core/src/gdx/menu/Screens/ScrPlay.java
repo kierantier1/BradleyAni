@@ -43,7 +43,7 @@ public class ScrPlay implements Screen, InputProcessor {
     float fJoyY;
     float fBallX;
     float fBallY;
-    float fBobH = 60, fBobW = 40, fPikaSize = 40;
+    float fBobH = 60, fBobW = 40, fPikaSize = 40, fBallSize = 20;
     int nDx, nDy, nDir;
     int nPixRenderTimer = 0;
     int nDirPixX, nDirPixY;       // Direction Pix wants to walk in.
@@ -130,14 +130,6 @@ public class ScrPlay implements Screen, InputProcessor {
                 arSprJoy[j] = new Sprite(sprJoy);
             }
             aranJoy[i] = new Animation(7f, arSprJoy);
-            fBobX = 400;
-            fBobY = 200;
-            fPikaX = 100;
-            fPikaY = 100;
-            fJoyX = 500;
-            fJoyY = 400;
-            fBallX = 400;
-            fBallY = 100;
         }
     }
 
@@ -158,33 +150,20 @@ public class ScrPlay implements Screen, InputProcessor {
         batch.begin();
         batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
         nDir = 0;
-        Rooms();
-        //hit testing agaist borders of rooms
-        if (fBobY < 20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
-            fBobY += 3;
+        if (nRoomNum == 3) {
+            batch.draw(sprBall, fBallX, fBallY, fBallSize, fBallSize);
         }
-        if (fBobX < 60 && nRoomNum == 0) {
-            fBobX += 3;
-        }
-        if (fBobY > 400 && nRoomNum == 0) {
-            fBobY -= 3;
-        }
-        if (fBobY > 200 && nRoomNum == 1) {
-            fBobY -= 3;
-        }
-        if (fBobY > 300 && nRoomNum == 2) {
-            fBobY -= 3;
-        }
-        PikaMove();
-        JoyMove();
         if (bMove == true) {
             batch.draw(sprBob, fBobX, fBobY, fBobW, fBobH);
         }
         batch.draw(trTemp2, fPikaX, fPikaY, 40, 40);
         batch.draw(trTemp3, fJoyX, fJoyX, 60, 70);
         batch.end();
+        Rooms();
+        PikaMove();
+        JoyMove();
         movement();
-
+        hits();
     }
 
     public void movement() {
@@ -228,11 +207,6 @@ public class ScrPlay implements Screen, InputProcessor {
 
             batch.end();
         }
-        //BENNY IS THE BOSS WHEN IT COMES TO HIT DETECTION!
-        if (fBobX + fBobW > fPikaX && fBobX < fPikaX + fPikaSize
-                && fBobY + fBobH > fPikaY && fBobY < fPikaY + fPikaSize) {
-            gamMenu.updateState(3);
-        }
     }
 
     public void Rooms() {
@@ -266,6 +240,22 @@ public class ScrPlay implements Screen, InputProcessor {
             fBobX = 0;
             fPikaX = -100;
             fJoyX = -100;
+        }
+        //hit testing agaist borders of rooms
+        if (fBobY < 20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
+            fBobY += 3;
+        }
+        if (fBobX < 60 && nRoomNum == 0) {
+            fBobX += 3;
+        }
+        if (fBobY > 400 && nRoomNum == 0) {
+            fBobY -= 3;
+        }
+        if (fBobY > 200 && nRoomNum == 1) {
+            fBobY -= 3;
+        }
+        if (fBobY > 300 && nRoomNum == 2) {
+            fBobY -= 3;
         }
     }
 
@@ -322,6 +312,19 @@ public class ScrPlay implements Screen, InputProcessor {
             fJoyX += nJoyXi;
             fJoyY += nJoyYi;
 
+        }
+    }
+
+    public void hits() {
+        //BENNY IS THE BOSS WHEN IT COMES TO HIT DETECTION!
+        if (fBobX + fBobW > fPikaX && fBobX < fPikaX + fPikaSize
+                && fBobY + fBobH > fPikaY && fBobY < fPikaY + fPikaSize) {
+            gamMenu.updateState(3);
+        }
+        if (fBobX + fBobW > fBallX && fBobX < fBallX + fBallSize
+                && fBobY + fBobH > fBallY && fBobY < fBallY + fBallSize) {
+            gamMenu.updateState(4);
+            //Create a new state
         }
     }
 

@@ -29,9 +29,9 @@ public class ScrPlay implements Screen, InputProcessor {
     BitmapFont screenName;
     Sprite sprBob, sprPika, sprJoy, sprBall;
     Sprite sprFront, sprBack, sprLeft, sprRight;
-    Texture txSheet, txSheet2, txSheet3, txSheet4, txTemp, txOne;
+    Texture txSheet, txSheet2, txSheet3, txSheet4, txTemp, txOne, txtBall;
     Texture txtFront, txtBack, txtRight, txtLeft;
-    Animation aranBob[], aranPic[], aranJoy[], aranBall[];
+    Animation aranBob[], aranPic[], aranJoy[];
     TextureRegion trTemp, trTemp2, trTemp3, trTemp4; // a single temporary texture region
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
     int nFrame, nPos;
@@ -49,10 +49,10 @@ public class ScrPlay implements Screen, InputProcessor {
     int nDirPixX, nDirPixY;       // Direction Pix wants to walk in.
     double nDeltaPixX, nDeltaPixY;
     double dPixAngle;
-    int nPixXi, nPixYi;   // Pix X and Y increment
+    int nPixXi, nPixYi;   // Pika X and Y increment
     int nJoyRenderTimer = 0;
     int nRoomNum = 0;   // Current room number we are in 
-    int nDirJoyX, nDirJoyY;       // Direction Pix wants to walk in.
+    int nDirJoyX, nDirJoyY;       // Direction Joy wants to walk in.
     double nDeltaJoyX, nDeltaJoyY;
     double dJoyAngle;
     int nJoyXi, nJoyYi;
@@ -68,8 +68,8 @@ public class ScrPlay implements Screen, InputProcessor {
         aranBob = new Animation[4];
         aranPic = new Animation[4];
         aranJoy = new Animation[4];
-        aranBall = new Animation[12];
         batch = new SpriteBatch();
+        txtBall = new Texture("Pokeball_(Paper).png");
         txSheet = new Texture("bob3.png");
         txtFront = new Texture("front2.png");
         txtBack = new Texture("back2.png");
@@ -82,8 +82,7 @@ public class ScrPlay implements Screen, InputProcessor {
         arrBackGround[0] = new Texture("town.png");
         arrBackGround[1] = new Texture("ff.png");
         arrBackGround[2] = new Texture("thing.jpg");
-
-        //BackGround = new Texture(Gdx.files.internal("town.png"));
+        sprBall = new Sprite(txtBall);
         fW = txSheet.getWidth() / 4;
         fH = txSheet.getHeight() / 4;
         System.out.println(fW + " " + fH);
@@ -159,38 +158,7 @@ public class ScrPlay implements Screen, InputProcessor {
         batch.begin();
         batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
         nDir = 0;
-
-        //This is changing rooms based on his coordinates
-        if (fBobX > 600 && nRoomNum == 0) {
-            nRoomNum = 1;
-            fBobX = 0;
-            fPikaX = -100;
-            fJoyX = -100;
-        }
-        if (fBobX < 0 && nRoomNum == 1) {
-            nRoomNum = 0;
-            fBobX = 600;
-            fPikaX = 700;
-            fJoyX = 700;
-        }
-        if (fBobX > 600 && nRoomNum == 1) {
-            nRoomNum = 2;
-            fBobX = 0;
-            fPikaX = -100;
-            fJoyX = -100;
-        }
-        if (fBobX < 0 && nRoomNum == 2) {
-            nRoomNum = 1;
-            fBobX = 600;
-            fPikaX = 700;
-            fJoyX = 700;
-        }
-        if (fBobX > 600 && nRoomNum == 2) {
-            nRoomNum = 0;
-            fBobX = 0;
-            fPikaX = -100;
-            fJoyX = -100;
-        }
+        Rooms();
         //hit testing agaist borders of rooms
         if (fBobY < 20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
             fBobY += 3;
@@ -207,57 +175,8 @@ public class ScrPlay implements Screen, InputProcessor {
         if (fBobY > 300 && nRoomNum == 2) {
             fBobY -= 3;
         }
-
-        nPixRenderTimer++;
-        if (nPixRenderTimer == 9) {
-            nPixRenderTimer = 0;
-
-            nDirPixX = 1;
-            if (fBobX < fPikaX) {
-                nDirPixX = -1;
-            }
-            nDirPixY = 1;
-            if (fBobY < fPikaY) {
-                nDirPixY = -1;
-            }
-
-            nDeltaPixX = abs(fPikaX - fBobX);
-            nDeltaPixY = abs(fPikaY - fBobY);
-
-            dPixAngle = atan(nDeltaPixX / nDeltaPixY);
-
-            nPixXi = (int) (12 * sin(dPixAngle) * nDirPixX);
-            nPixYi = (int) (12 * cos(dPixAngle) * nDirPixY);
-
-            fPikaX += nPixXi;
-            fPikaY += nPixYi;
-
-        }
-        nJoyRenderTimer++;
-        if (nJoyRenderTimer == 9) {
-            nJoyRenderTimer = 0;
-
-            nDirJoyX = 1;
-            if (fPikaX < fJoyX) {
-                nDirJoyX = -1;
-            }
-            nDirJoyY = 1;
-            if (fPikaY < fJoyY) {
-                nDirJoyY = -1;
-            }
-
-            nDeltaJoyX = abs(fJoyX - fPikaX);
-            nDeltaJoyY = abs(fJoyY - fPikaY);
-
-            dJoyAngle = atan(nDeltaJoyX / nDeltaJoyY);
-
-            nJoyXi = (int) (10 * sin(dJoyAngle) * nDirJoyX);
-            nJoyYi = (int) (10 * cos(dJoyAngle) * nDirJoyY);
-
-            fJoyX += nJoyXi;
-            fJoyY += nJoyYi;
-
-        }
+        PikaMove();
+        JoyMove();
         if (bMove == true) {
             batch.draw(sprBob, fBobX, fBobY, fBobW, fBobH);
         }
@@ -313,6 +232,96 @@ public class ScrPlay implements Screen, InputProcessor {
         if (fBobX + fBobW > fPikaX && fBobX < fPikaX + fPikaSize
                 && fBobY + fBobH > fPikaY && fBobY < fPikaY + fPikaSize) {
             gamMenu.updateState(3);
+        }
+    }
+
+    public void Rooms() {
+        //This is changing rooms based on his coordinates
+        if (fBobX > 600 && nRoomNum == 0) {
+            nRoomNum = 1;
+            fBobX = 0;
+            fPikaX = -100;
+            fJoyX = -100;
+        }
+        if (fBobX < 0 && nRoomNum == 1) {
+            nRoomNum = 0;
+            fBobX = 600;
+            fPikaX = 700;
+            fJoyX = 700;
+        }
+        if (fBobX > 600 && nRoomNum == 1) {
+            nRoomNum = 2;
+            fBobX = 0;
+            fPikaX = -100;
+            fJoyX = -100;
+        }
+        if (fBobX < 0 && nRoomNum == 2) {
+            nRoomNum = 1;
+            fBobX = 600;
+            fPikaX = 700;
+            fJoyX = 700;
+        }
+        if (fBobX > 600 && nRoomNum == 2) {
+            nRoomNum = 0;
+            fBobX = 0;
+            fPikaX = -100;
+            fJoyX = -100;
+        }
+    }
+
+    public void PikaMove() {
+        nPixRenderTimer++;
+        if (nPixRenderTimer == 9) {
+            nPixRenderTimer = 0;
+
+            nDirPixX = 1;
+            if (fBobX < fPikaX) {
+                nDirPixX = -1;
+            }
+            nDirPixY = 1;
+            if (fBobY < fPikaY) {
+                nDirPixY = -1;
+            }
+
+            nDeltaPixX = abs(fPikaX - fBobX);
+            nDeltaPixY = abs(fPikaY - fBobY);
+
+            dPixAngle = atan(nDeltaPixX / nDeltaPixY);
+
+            nPixXi = (int) (12 * sin(dPixAngle) * nDirPixX);
+            nPixYi = (int) (12 * cos(dPixAngle) * nDirPixY);
+
+            fPikaX += nPixXi;
+            fPikaY += nPixYi;
+
+        }
+    }
+
+    public void JoyMove() {
+        nJoyRenderTimer++;
+        if (nJoyRenderTimer == 9) {
+            nJoyRenderTimer = 0;
+
+            nDirJoyX = 1;
+            if (fPikaX < fJoyX) {
+                nDirJoyX = -1;
+            }
+            nDirJoyY = 1;
+            if (fPikaY < fJoyY) {
+                nDirJoyY = -1;
+            }
+
+            nDeltaJoyX = abs(fJoyX - fPikaX);
+            nDeltaJoyY = abs(fJoyY - fPikaY);
+
+            dJoyAngle = atan(nDeltaJoyX / nDeltaJoyY);
+
+            nJoyXi = (int) (10 * sin(dJoyAngle) * nDirJoyX);
+            nJoyYi = (int) (10 * cos(dJoyAngle) * nDirJoyY);
+
+            fJoyX += nJoyXi;
+            fJoyY += nJoyYi;
+
         }
     }
 

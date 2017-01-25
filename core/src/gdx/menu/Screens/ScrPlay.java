@@ -27,22 +27,23 @@ public class ScrPlay implements Screen, InputProcessor {
     TbMenu tbMenu, tbGameover;
     SpriteBatch batch;
     BitmapFont screenName;
-    Sprite sprBob, sprPic, sprJoy, sprBall;
+    Sprite sprBob, sprPika, sprJoy, sprBall;
+    Sprite sprFront, sprBack, sprLeft, sprRight;
     Texture txSheet, txSheet2, txSheet3, txSheet4, txTemp, txOne;
     Texture txtFront, txtBack, txtRight, txtLeft;
     Animation aranBob[], aranPic[], aranJoy[], aranBall[];
     TextureRegion trTemp, trTemp2, trTemp3, trTemp4; // a single temporary texture region
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
     int nFrame, nPos;
-    float spriteSpeed = 10.0f; // 10 pixels per second.
-    float fSpriteX = 400;
-    float fSpriteY = 200;
-    float fSpriteX2 = 100;
-    float fSpriteY2 = 100;
-    float fSpriteX3 = 500;
-    float fSpriteY3 = 400;
-    float fSpriteX4 = 400;
-    float fSpriteY4 = 100;
+    float fBobX;
+    float fBobY;
+    float fPikaX;
+    float fPikaY;
+    float fJoyX;
+    float fJoyY;
+    float fBallX;
+    float fBallY;
+    float fBobH = 60, fBobW = 40, fPikaSize = 40;
     int nDx, nDy, nDir;
     int nPixRenderTimer = 0;
     int nDirPixX, nDirPixY;       // Direction Pix wants to walk in.
@@ -55,6 +56,7 @@ public class ScrPlay implements Screen, InputProcessor {
     double nDeltaJoyX, nDeltaJoyY;
     double dJoyAngle;
     int nJoyXi, nJoyYi;
+    boolean bMove;
     //Texture BackGround;
     Texture arrBackGround[];
 
@@ -76,9 +78,7 @@ public class ScrPlay implements Screen, InputProcessor {
         txSheet2 = new Texture("pic5.png");
         txSheet3 = new Texture("joy3.png");
         txSheet4 = new Texture("ball3.png");
-
         arrBackGround = new Texture[9];
-
         arrBackGround[0] = new Texture("town.png");
         arrBackGround[1] = new Texture("ff.png");
         arrBackGround[2] = new Texture("thing.jpg");
@@ -94,6 +94,15 @@ public class ScrPlay implements Screen, InputProcessor {
                 fSy = i * fH;
                 sprBob = new Sprite(txSheet, fSx, fSy, fW, fH);
                 arSprBob[j] = new Sprite(sprBob);
+                if (i == 0 && j == 0) {
+                    sprFront = new Sprite(sprBob);
+                } else if (i == 1 && j == 0) {
+                    sprBack = new Sprite(sprBob);
+                } else if (i == 2 && j == 0) {
+                    sprLeft = new Sprite(sprBob);
+                } else if (i == 3 && j == 1) {
+                    sprRight = new Sprite(sprBob);
+                }
             }
             aranBob[i] = new Animation(7f, arSprBob);
 
@@ -105,8 +114,8 @@ public class ScrPlay implements Screen, InputProcessor {
             for (int j = 0; j < 4; j++) {
                 fSx = j * fW;
                 fSy = i * fH;
-                sprPic = new Sprite(txSheet2, fSx, fSy, fW, fH);
-                arSprPic[j] = new Sprite(sprPic);
+                sprPika = new Sprite(txSheet2, fSx, fSy, fW, fH);
+                arSprPic[j] = new Sprite(sprPika);
             }
             aranPic[i] = new Animation(7f, arSprPic);
 
@@ -122,7 +131,14 @@ public class ScrPlay implements Screen, InputProcessor {
                 arSprJoy[j] = new Sprite(sprJoy);
             }
             aranJoy[i] = new Animation(7f, arSprJoy);
-
+            fBobX = 400;
+            fBobY = 200;
+            fPikaX = 100;
+            fPikaY = 100;
+            fJoyX = 500;
+            fJoyY = 400;
+            fBallX = 400;
+            fBallY = 100;
         }
     }
 
@@ -135,98 +151,61 @@ public class ScrPlay implements Screen, InputProcessor {
             nFrame = 0;
         }
         trTemp = aranBob[nPos].getKeyFrame(nFrame, true);
+        sprBob = new Sprite(trTemp);
         trTemp2 = aranPic[nPos].getKeyFrame(nFrame, true);
+        sprPika = new Sprite(trTemp2);
         trTemp3 = aranJoy[nPos].getKeyFrame(nFrame, true);
+        sprJoy = new Sprite(trTemp3);
         batch.begin();
-        nDx = 0;
-        nDy = 0;
+        batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
         nDir = 0;
 
         //This is changing rooms based on his coordinates
-        if (fSpriteX > 600 && nRoomNum == 0) {
+        if (fBobX > 600 && nRoomNum == 0) {
             nRoomNum = 1;
-            fSpriteX = 0;
-            fSpriteX2 = -100;
-            fSpriteX3 = -100;
+            fBobX = 0;
+            fPikaX = -100;
+            fJoyX = -100;
         }
-        if (fSpriteX < 0 && nRoomNum == 1) {
+        if (fBobX < 0 && nRoomNum == 1) {
             nRoomNum = 0;
-            fSpriteX = 600;
-            fSpriteX2 = 700;
-            fSpriteX3 = 700;
+            fBobX = 600;
+            fPikaX = 700;
+            fJoyX = 700;
         }
-        if (fSpriteX > 600 && nRoomNum == 1) {
+        if (fBobX > 600 && nRoomNum == 1) {
             nRoomNum = 2;
-            fSpriteX = 0;
-            fSpriteX2 = -100;
-            fSpriteX3 = -100;
+            fBobX = 0;
+            fPikaX = -100;
+            fJoyX = -100;
         }
-        if (fSpriteX < 0 && nRoomNum == 2) {
+        if (fBobX < 0 && nRoomNum == 2) {
             nRoomNum = 1;
-            fSpriteX = 600;
-            fSpriteX2 = 700;
-            fSpriteX3 = 700;
+            fBobX = 600;
+            fPikaX = 700;
+            fJoyX = 700;
         }
-        if (fSpriteX > 600 && nRoomNum == 2) {
+        if (fBobX > 600 && nRoomNum == 2) {
             nRoomNum = 0;
-            fSpriteX = 0;
-            fSpriteX2 = -100;
-            fSpriteX3 = -100;
+            fBobX = 0;
+            fPikaX = -100;
+            fJoyX = -100;
         }
         //hit testing agaist borders of rooms
-        if (fSpriteY < 20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
-            fSpriteY += 3;
+        if (fBobY < 20 && (nRoomNum == 0 || nRoomNum == 1 || nRoomNum == 2)) {
+            fBobY += 3;
         }
-        if (fSpriteX < 60 && nRoomNum == 0) {
-            fSpriteX += 3;
+        if (fBobX < 60 && nRoomNum == 0) {
+            fBobX += 3;
         }
-         if (fSpriteY > 400 && nRoomNum == 0) {
-            fSpriteY -= 3;
+        if (fBobY > 400 && nRoomNum == 0) {
+            fBobY -= 3;
         }
-          if (fSpriteY > 200 && nRoomNum == 1) {
-            fSpriteY -= 3;
+        if (fBobY > 200 && nRoomNum == 1) {
+            fBobY -= 3;
         }
-           if (fSpriteY > 300 && nRoomNum == 2) {
-            fSpriteY -= 3;
-        }
-
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
-            nDy = -3;
-            nPos = 0;
-            batch.draw(trTemp, fSpriteX, fSpriteY, 40, 70);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
-            nDy = 3;
-            nPos = 1;
-            batch.draw(trTemp, fSpriteX, fSpriteY, 40, 70);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
-            nDx = -3;
-            nPos = 2;
-            batch.draw(trTemp, fSpriteX, fSpriteY, 40, 70);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
-            nDx = 3;
-            nPos = 3;
-            batch.draw(trTemp, fSpriteX, fSpriteY, 40, 70);
-        } else {
-            batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
-            if (nPos == 0) {
-                batch.draw(txtFront, fSpriteX, fSpriteY, 40, 60);
-            }
-            if (nPos == 1) {
-                batch.draw(txtBack, fSpriteX, fSpriteY, 40, 60);
-            }
-            if (nPos == 2) {
-                batch.draw(txtLeft, fSpriteX, fSpriteY, 40, 55);
-            }
-            if (nPos == 3) {
-                batch.draw(txtRight, fSpriteX, fSpriteY, 40, 55);
-            }
-
+        if (fBobY > 300 && nRoomNum == 2) {
+            fBobY -= 3;
         }
 
         nPixRenderTimer++;
@@ -234,24 +213,24 @@ public class ScrPlay implements Screen, InputProcessor {
             nPixRenderTimer = 0;
 
             nDirPixX = 1;
-            if (fSpriteX < fSpriteX2) {
+            if (fBobX < fPikaX) {
                 nDirPixX = -1;
             }
             nDirPixY = 1;
-            if (fSpriteY < fSpriteY2) {
+            if (fBobY < fPikaY) {
                 nDirPixY = -1;
             }
 
-            nDeltaPixX = abs(fSpriteX2 - fSpriteX);
-            nDeltaPixY = abs(fSpriteY2 - fSpriteY);
+            nDeltaPixX = abs(fPikaX - fBobX);
+            nDeltaPixY = abs(fPikaY - fBobY);
 
             dPixAngle = atan(nDeltaPixX / nDeltaPixY);
 
             nPixXi = (int) (12 * sin(dPixAngle) * nDirPixX);
             nPixYi = (int) (12 * cos(dPixAngle) * nDirPixY);
 
-            fSpriteX2 += nPixXi;
-            fSpriteY2 += nPixYi;
+            fPikaX += nPixXi;
+            fPikaY += nPixYi;
 
         }
         nJoyRenderTimer++;
@@ -259,42 +238,82 @@ public class ScrPlay implements Screen, InputProcessor {
             nJoyRenderTimer = 0;
 
             nDirJoyX = 1;
-            if (fSpriteX2 < fSpriteX3) {
+            if (fPikaX < fJoyX) {
                 nDirJoyX = -1;
             }
             nDirJoyY = 1;
-            if (fSpriteY2 < fSpriteY3) {
+            if (fPikaY < fJoyY) {
                 nDirJoyY = -1;
             }
 
-            nDeltaJoyX = abs(fSpriteX3 - fSpriteX2);
-            nDeltaJoyY = abs(fSpriteY3 - fSpriteY2);
+            nDeltaJoyX = abs(fJoyX - fPikaX);
+            nDeltaJoyY = abs(fJoyY - fPikaY);
 
             dJoyAngle = atan(nDeltaJoyX / nDeltaJoyY);
 
             nJoyXi = (int) (10 * sin(dJoyAngle) * nDirJoyX);
             nJoyYi = (int) (10 * cos(dJoyAngle) * nDirJoyY);
 
-            fSpriteX3 += nJoyXi;
-            fSpriteY3 += nJoyYi;
+            fJoyX += nJoyXi;
+            fJoyY += nJoyYi;
 
         }
-        batch.draw(trTemp2, fSpriteX2, fSpriteY2, 40, 40);
-        batch.draw(trTemp3, fSpriteX3, fSpriteY3, 60, 70);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
-            batch.draw(trTemp, fSpriteX, fSpriteY, 40, 70);
-            batch.draw(trTemp2, fSpriteX2, fSpriteY2, 40, 40);
-            batch.draw(trTemp3, fSpriteX3, fSpriteY3, 60, 70);
-            nDx = (nDx * 2);
-            nDy = (nDy * 2);
-
+        if (bMove == true) {
+            batch.draw(sprBob, fBobX, fBobY, fBobW, fBobH);
         }
-        fSpriteX += nDx;
-        fSpriteY += nDy;
+        batch.draw(trTemp2, fPikaX, fPikaY, 40, 40);
+        batch.draw(trTemp3, fJoyX, fJoyX, 60, 70);
         batch.end();
+        movement();
 
+    }
+
+    public void movement() {
+        bMove = true;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            fBobY -= 3;
+            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                fBobY -= 3;
+            }
+            nPos = 0;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            fBobY += 3;
+            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                fBobY += 3;
+            }
+            nPos = 1;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            fBobX -= 3;
+            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                fBobX -= 3;
+            }
+            nPos = 2;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            fBobX += 3;
+            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                fBobX += 3;
+            }
+            nPos = 3;
+        } else {
+            bMove = false;
+            batch.begin();
+            if (nPos == 0) {
+                batch.draw(sprFront, fBobX, fBobY, fBobW, fBobH);
+            } else if (nPos == 1) {
+                batch.draw(sprBack, fBobX, fBobY, fBobW, fBobH);
+            } else if (nPos == 2) {
+                batch.draw(sprLeft, fBobX, fBobY, fBobW, fBobH);
+            } else if (nPos == 3) {
+                batch.draw(sprRight, fBobX, fBobY, fBobW, fBobH);
+            }
+
+            batch.end();
+        }
+        //BENNY IS THE BOSS WHEN IT COMES TO HIT DETECTION!
+        if (fBobX + fBobW > fPikaX && fBobX < fPikaX + fPikaSize
+                && fBobY + fBobH > fPikaY && fBobY < fPikaY + fPikaSize) {
+            gamMenu.updateState(3);
+        }
     }
 
     @Override

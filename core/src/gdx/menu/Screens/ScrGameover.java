@@ -35,7 +35,7 @@ public class ScrGameover implements Screen, InputProcessor {
         tbPlay.setY(0);
         tbPlay.setX(0);
         tbMenu.setY(0);
-        tbMenu.setX(440);
+        tbMenu.setX(540);
         stage.addActor(tbMenu);
         stage.addActor(tbPlay);
         Gdx.input.setInputProcessor(stage);
@@ -47,7 +47,8 @@ public class ScrGameover implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1); //black background.
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        screenName.draw(batch, "This is the GAMEOVER screen", 230, 275);
+        screenName.draw(batch, "Pikachu caught you", 250, 275);
+        screenName.draw(batch, "GAMEOVER", 265, 355);
         batch.end();
         stage.act();
         stage.draw();

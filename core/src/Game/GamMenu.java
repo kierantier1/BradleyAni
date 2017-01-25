@@ -12,7 +12,7 @@ public class GamMenu extends Game {
     ScrPlay scrPlay;
     ScrRules scrRules;
     ScrGameover scrGameover;
-    int nScreen; // 0 for menu, 1 for play, and 2 for game over
+    int nScreen; // 0 for menu, 1 for play, and 2 for rules, 3 for Game over
 
     public void updateState(int _nScreen) {
         System.out.println(nScreen);
@@ -23,6 +23,8 @@ public class GamMenu extends Game {
             setScreen(scrPlay);
         } else if (nScreen == 2) {
             setScreen(scrRules);
+        } else if (nScreen == 3) {
+            setScreen(scrGameover);
         }
     }
 
@@ -33,6 +35,7 @@ public class GamMenu extends Game {
         scrMenu = new ScrMenu(this);
         scrPlay = new ScrPlay(this);
         scrRules = new ScrRules(this);
+        scrGameover = new ScrGameover(this);
         //   scrGameover = new ScrGameover(this);
         updateState(0);
     }

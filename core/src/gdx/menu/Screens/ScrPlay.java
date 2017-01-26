@@ -9,12 +9,15 @@ import gdx.menus.TbsMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import static java.lang.Math.abs;
 import static java.lang.Math.atan;
 import static java.lang.Math.cos;
@@ -30,19 +33,19 @@ public class ScrPlay implements Screen, InputProcessor {
     Sprite sprBob, sprPika, sprJoy, sprBall;
     Sprite sprFront, sprBack, sprLeft, sprRight;
     Texture txSheet, txSheet2, txSheet3, txSheet4, txTemp, txOne, txtBall;
-    Texture txtFront, txtBack, txtRight, txtLeft;
     Animation aranBob[], aranPic[], aranJoy[];
     TextureRegion trTemp, trTemp2, trTemp3, trTemp4; // a single temporary texture region
     int fW, fH, fSx, fSy; // height and width of SpriteSheet image - and the starting upper coordinates on the Sprite Sheet
     int nFrame, nPos;
-    float fBobX;
-    float fBobY;
-    float fPikaX;
-    float fPikaY;
-    float fJoyX;
-    float fJoyY;
-    float fBallX;
-    float fBallY;
+    float fBobX = 200;
+    float fBobY = 200;
+    float fPikaX = 100;
+    float fPikaY = 100;
+    float fJoyX = 600;
+    float fJoyY = 700;
+    float fBallX = 300;
+    float fBallY = 300;
+    Vector2 vBobPos, vPikaPos;
     float fBobH = 60, fBobW = 40, fPikaSize = 40, fBallSize = 20;
     int nDx, nDy, nDir;
     int nPixRenderTimer = 0;
@@ -59,6 +62,7 @@ public class ScrPlay implements Screen, InputProcessor {
     boolean bMove;
     //Texture BackGround;
     Texture arrBackGround[];
+    ShapeRenderer shape;
 
     public ScrPlay(GamMenu _gamMenu) {  //Referencing the main class.
         gamMenu = _gamMenu;
@@ -71,13 +75,8 @@ public class ScrPlay implements Screen, InputProcessor {
         batch = new SpriteBatch();
         txtBall = new Texture("Pokeball_(Paper).png");
         txSheet = new Texture("bob3.png");
-        txtFront = new Texture("front2.png");
-        txtBack = new Texture("back2.png");
-        txtRight = new Texture("right2.png");
-        txtLeft = new Texture("left2.png");
         txSheet2 = new Texture("pic5.png");
         txSheet3 = new Texture("joy3.png");
-        txSheet4 = new Texture("ball3.png");
         arrBackGround = new Texture[9];
         arrBackGround[0] = new Texture("town.png");
         arrBackGround[1] = new Texture("ff.png");
@@ -131,6 +130,10 @@ public class ScrPlay implements Screen, InputProcessor {
             }
             aranJoy[i] = new Animation(7f, arSprJoy);
         }
+        shape = new ShapeRenderer();
+        //Thanks, Abdullah.
+        vBobPos = new Vector2(fBobX, fBobY);
+        vPikaPos = new Vector2(fPikaX, fPikaY);
     }
 
     @Override
@@ -142,22 +145,23 @@ public class ScrPlay implements Screen, InputProcessor {
             nFrame = 0;
         }
         trTemp = aranBob[nPos].getKeyFrame(nFrame, true);
-        sprBob = new Sprite(trTemp);
+        sprBob.setRegion(trTemp);
         trTemp2 = aranPic[nPos].getKeyFrame(nFrame, true);
-        sprPika = new Sprite(trTemp2);
+        sprPika.setRegion(trTemp2);
         trTemp3 = aranJoy[nPos].getKeyFrame(nFrame, true);
-        sprJoy = new Sprite(trTemp3);
+        sprJoy.setRegion(trTemp3);
+
         batch.begin();
         batch.draw(arrBackGround[nRoomNum], 0, 0, 800, 500);
         nDir = 0;
-        if (nRoomNum == 3) {
+        if (nRoomNum == 2) {
             batch.draw(sprBall, fBallX, fBallY, fBallSize, fBallSize);
         }
         if (bMove == true) {
             batch.draw(sprBob, fBobX, fBobY, fBobW, fBobH);
         }
-        batch.draw(trTemp2, fPikaX, fPikaY, 40, 40);
-        batch.draw(trTemp3, fJoyX, fJoyX, 60, 70);
+        batch.draw(sprPika, fPikaX, fPikaY, fPikaSize, fPikaSize);
+        batch.draw(sprJoy, fJoyX, fJoyX, 60, 70);
         batch.end();
         Rooms();
         PikaMove();
@@ -317,14 +321,26 @@ public class ScrPlay implements Screen, InputProcessor {
 
     public void hits() {
         //BENNY IS THE BOSS WHEN IT COMES TO HIT DETECTION!
-        if (fBobX + fBobW > fPikaX && fBobX < fPikaX + fPikaSize
-                && fBobY + fBobH > fPikaY && fBobY < fPikaY + fPikaSize) {
+        if (fBobX + fBobW - 25 > fPikaX && fBobX < fPikaX + fPikaSize - 15
+                && fBobY + fBobH - 25 > fPikaY && fBobY < fPikaY + fPikaSize - 15) {
             gamMenu.updateState(3);
+            fPikaX = vPikaPos.x;
+            fPikaY = vPikaPos.y;
+            fBobX = vBobPos.x;
+            fBobY = vBobPos.y;
+            nRoomNum = 0;
         }
-        if (fBobX + fBobW > fBallX && fBobX < fBallX + fBallSize
-                && fBobY + fBobH > fBallY && fBobY < fBallY + fBallSize) {
-            gamMenu.updateState(4);
-            //Create a new state
+        if (nRoomNum == 2) {
+            if (fBobX + fBobW > fBallX && fBobX < fBallX + fBallSize
+                    && fBobY + fBobH > fBallY && fBobY < fBallY + fBallSize) {
+                gamMenu.updateState(4);
+                fPikaX = vPikaPos.x;
+                fPikaY = vPikaPos.y;
+                fBobX = vBobPos.x;
+                fBobY = vBobPos.y;
+                nRoomNum = 0;
+                //Create a new state for 
+            }
         }
     }
 

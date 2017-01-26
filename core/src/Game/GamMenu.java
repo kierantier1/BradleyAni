@@ -5,6 +5,7 @@ import gdx.menu.Screens.ScrMenu;
 import gdx.menu.Screens.ScrPlay;
 import gdx.menu.Screens.ScrGameover;
 import gdx.menu.Screens.ScrRules;
+import gdx.menu.Screens.ScrWin;
 
 public class GamMenu extends Game {
 
@@ -12,6 +13,7 @@ public class GamMenu extends Game {
     ScrPlay scrPlay;
     ScrRules scrRules;
     ScrGameover scrGameover;
+    ScrWin scrWin;
     int nScreen; // 0 for menu, 1 for play, and 2 for rules, 3 for Game over
 
     public void updateState(int _nScreen) {
@@ -25,6 +27,8 @@ public class GamMenu extends Game {
             setScreen(scrRules);
         } else if (nScreen == 3) {
             setScreen(scrGameover);
+        } else if (nScreen == 4) {
+            setScreen(scrWin);
         }
     }
 
@@ -36,7 +40,7 @@ public class GamMenu extends Game {
         scrPlay = new ScrPlay(this);
         scrRules = new ScrRules(this);
         scrGameover = new ScrGameover(this);
-        //   scrGameover = new ScrGameover(this);
+        scrWin = new ScrWin(this);
         updateState(0);
     }
 

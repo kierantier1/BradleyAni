@@ -35,7 +35,7 @@ public class ScrMenu implements Screen, InputProcessor {
         batch = new SpriteBatch();
         screenName = new BitmapFont();
         tbPlay = new TbMenu("PLAY", tbsMenu);
-        tbRules = new TbMenu("CONTROLS", tbsMenu);
+        tbRules = new TbMenu("RULES", tbsMenu);
         tbPlay.setY(0);
         tbPlay.setX(540);
         tbRules.setY(0);

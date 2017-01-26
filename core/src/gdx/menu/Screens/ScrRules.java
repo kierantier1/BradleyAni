@@ -52,8 +52,7 @@ public class ScrRules implements Screen, InputProcessor {
         screenName.draw(batch, "3) Mouse to click things (but you already knew that ;) )", 230, 335);
         screenName.draw(batch, "OBJECTIVE", 230, 300);
         screenName.draw(batch, "FIND THE POKEBALL", 230, 270);
-        screenName.draw(batch, "DON'T LET PIKACHEU OR JOY CATCH YOU!!!!", 230, 250);
-        
+        screenName.draw(batch, "DON'T LET PIKACHU CATCH YOU, OR ELSE!!!", 230, 250);
         batch.end();
         stage.act();
         stage.draw();
